@@ -1,0 +1,172 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class User {
+    int id;
+    String type;
+    String name;
+    String email;
+    String phone;
+    String address;
+}
+
+' Every Mail / Phone will be linked with a single Account | Unique for a platform
+class Account {
+    int id;
+    AccountStatus status;
+    String password;
+
+    public void resetPassword();
+    public void setPassword();
+}
+
+User *-- Account
+
+'
+class Member {
+    String username;
+    String dateOfJoining;
+    Profile profile;
+    List <Post> posts;
+}
+
+class Profile {
+    blob profilePic;
+    blob profileBackground;
+    List<Work> workHistory;
+    List<Education> educationHistory;
+}
+
+class Work {
+    int id;
+    String companyName;
+    String position;
+    double yoe;
+    String address;
+    String state;
+    String pinCode;
+    String dateOfJoining;
+    String dateOfEnd;
+    String description;
+}
+
+class Education {
+    int id;
+    String name;
+    String educationLevel;
+    String degree;
+    String dateOfJoining;
+    String dateOfCompletion;
+    String description;
+}
+
+Member "1" *-- "1" Profile : contains
+Profile "1" *-- "many" Work
+Profile "1" *-- "many" Education
+
+class Post {
+    int id;
+    MediaType mediaItem;
+    String description;
+    String dateOfCreation;
+    Rating rating;
+    List<Comment> comments;
+}
+
+class Rating {
+    int likeCount;
+    int laughCount;
+    int heartCount;
+    int angryCount;
+    int supportCount;
+}
+
+class Comment {
+    int id;
+    String dateOfCreation;
+    String message;
+    Rating rating;
+    List<Reply> replies;
+}
+
+Member "1" *-- "many" Post : create / edit / delete
+Post "1" *-- "1" Rating : has
+Post "1" *-- "many" Comment : has
+
+class Reply {
+    int id;
+    String dateOfCreation;
+    String message;
+    Rating rating;
+    List<Reply> replies;
+}
+
+Comment "1" *-- "many" Reply : has
+Reply "1" *-- "many" Reply : has
+Reply "1" *-- "1" Rating : has
+
+
+class Admin {
+    public void blockUser(int userId);
+    public void unblockUser(int userId);
+    public void blockPost();
+    public void unblockPost();
+}
+
+User <|-- Member : extends
+User <|-- Admin : extends
+
+' Creation feature to be included in paid sub version
+class Page {
+    int id;
+    String title;
+    List<Post> posts;
+    List<MediaType> mediaItems;
+}
+
+Member "many" -- "many" Page : follows
+Page "1" *-- "many" Post
+
+class Group {
+    int id;
+    String name;
+    List<Post> posts;
+    List<MediaType> mediaItems;
+}
+
+Group "many" <-- "many" Member : create / join and post / share media items
+
+class ConnectionRequests= {
+    Member memberInvited;
+    String message;
+    ConnectionStatus status;
+    String dateOfCreation;
+
+    public boolean acceptInvite();
+    public boolean rejectInvite();
+}
+
+Member "1" *-- "many" ConnectionRequests : sends
+
+class Message {
+    int id;
+    Member sendTo;
+    String message;
+    MediaType mediaItem;
+    String dateOdCreation;
+}
+
+Member "1" --> "many" Message : sends
+
+class Notification {
+    Member sendTo;
+    int notificationId;
+    String dateOfCreation;
+    String message;
+}
+
+Message "1" --> "1" Notification : creates >
+ConnectionRequest "1" --> "1" Notification : creates >
+Post "1" --> "1" Notification : create >
+
+@enduml
