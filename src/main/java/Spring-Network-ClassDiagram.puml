@@ -5,26 +5,47 @@ abstract class User {
     int id;
     String type;
     String name;
-    String email;
-    String phone;
+    String email UNIQUE;
+    String phone UNIQUE;
     String address;
+    String username;
+    String password;
+    boolean enabled;
+    Date updatedAt;
 }
 
 ' Every Mail / Phone will be linked with a single Account | Unique for a platform
 class Account {
     int id;
+    String platform;
+    String username;
+    String email UNIQUE;
+    Strong phone UNIQUE;
     AccountStatus status;
-    String password;
 
-    public void resetPassword();
-    public void setPassword();
+    public void resetStatus();
+    public void setStatus();
 }
 
 User *-- Account
 
+class Role {
+    int id;
+    String name;
+    List <User> userList;
+    List <Privilege> privilegeList;
+}
+
+class Privilege {
+    int id;
+    String name;
+    List <Role> roleList
+}
+
+Role *-- Privilege
+User *-- Role
 '
 class Member {
-    String username;
     String dateOfJoining;
     Profile profile;
     List <Post> posts;
@@ -113,8 +134,13 @@ class Admin {
     public void unblockPost();
 }
 
+class Moderator {
+    public void deletePost(int postId);
+}
+
 User <|-- Member : extends
 User <|-- Admin : extends
+User <|-- Moderator : extends
 
 ' Creation feature to be included in paid sub version
 class Page {
@@ -136,7 +162,7 @@ class Group {
 
 Group "many" <-- "many" Member : create / join and post / share media items
 
-class ConnectionRequests= {
+class ConnectionRequests {
     Member memberInvited;
     String message;
     ConnectionStatus status;
