@@ -1,6 +1,7 @@
-package com.shubham.project.spring_network.model;
+package com.shubham.project.spring_network.persistence.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.DiscriminatorFormula;
 
 import java.util.Collection;
 import java.util.Date;
@@ -9,13 +10,14 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.CHAR)
+@DiscriminatorValue(value = "Z")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private long id;
 
-    @Column(name = "type")
+    @Column(name = "type", insertable=false, updatable=false)
     private String type;
 
     @Column(name = "username", unique = true)
@@ -49,20 +51,25 @@ public class User {
     )
     private Collection<Role>  roles;
 
-    public User(String type, String username, String name, String email, String phone, String address) {
+    public User() {
+    }
+
+    public User(String type, String username, String name, String email, String phone, String address, boolean enabled) {
         this.type = type;
         this.username = username;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.enabled = enabled;
+        this.updatedAt = new Date();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -136,6 +143,14 @@ public class User {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
