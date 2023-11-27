@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+@Service(value = "userDetailsService")
 @Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -42,18 +44,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     private AdminService adminSvc;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = null;
 
-        user = memberDAO.findByEmail(email);
+        user = memberDAO.findByUsername(username);
 
         if (user == null) {
             // Check for moderator
-            user = moderatorDAO.findByEmail(email);
+            user = moderatorDAO.findByUsername(username);
 
             if (user == null) {
                 // Check for admin
-                user = adminDAO.findByEmail(email);
+                user = adminDAO.findByUsername(username);
             }
         }
 

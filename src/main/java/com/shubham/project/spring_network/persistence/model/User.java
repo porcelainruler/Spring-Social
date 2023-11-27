@@ -23,7 +23,7 @@ public class User {
     @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 60)
     private String password;
 
     @Column(name = "name")
@@ -44,6 +44,8 @@ public class User {
     @Column(name = "updatedAt")
     private Date updatedAt;
 
+    private String secret;
+
     @ManyToMany
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -52,17 +54,21 @@ public class User {
     private Collection<Role>  roles;
 
     public User() {
+        super();
+        this.secret = "secret123";
     }
 
-    public User(String type, String username, String name, String email, String phone, String address, boolean enabled) {
+    public User(String type, String username, String password, String name, String email, String phone, String address, boolean enabled, Collection<Role> roles) {
         this.type = type;
         this.username = username;
+        this.password = password;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.enabled = enabled;
         this.updatedAt = new Date();
+        this.roles = roles;
     }
 
     public long getId() {
@@ -151,6 +157,14 @@ public class User {
 
     public void setRoles(Collection<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     @Override

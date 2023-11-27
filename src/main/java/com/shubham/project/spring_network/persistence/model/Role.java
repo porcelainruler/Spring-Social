@@ -28,9 +28,9 @@ public class Role {
         super();
     }
 
-    public Role(final String name) {
-        super();
+    public Role(String name, Collection<Privilege> privileges) {
         this.name = name;
+        this.privileges = privileges;
     }
 
     public long getId() {

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface MemberDAO extends JpaRepository<Member, Long> {
     Member findByEmail(String email);
 
+    Member findByUsername(String username);
+
     @Override
     void delete(Member member);
 
