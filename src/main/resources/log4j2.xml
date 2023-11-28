@@ -44,7 +44,6 @@
         <Root level="info">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFileSystem" />
-            <AppenderRef ref="RollingFileAPI" />
         </Root>
 
         <!-- LOG "com.shubham*" at TRACE level -->
