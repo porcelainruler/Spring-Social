@@ -13,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,6 +33,7 @@ import java.util.Arrays;
 
 @EnableWebSecurity
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -60,23 +63,17 @@ public class SecurityConfig {
         //                );;
 
         // ! Filter chain for JAVA jwt based Backend Service
-        http.csrf(csrf -> csrf.disable())
-                .authorizeRequests().
-                requestMatchers("/test").authenticated().requestMatchers("api/v1/auth/login").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated();
+                });
+        http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-//                .formLogin((formLogin) -> formLogin.loginPage("/login")
-////                        .defaultSuccessUrl("/swagger-ui/index.html#/")
-//                        .defaultSuccessUrl("/")
-//                        .failureUrl("/login?error=true")
-////                        .successHandler(myAuthenticationSuccessHandler)
-////                        .failureHandler(authenticationFailureHandler)
-////                        .authenticationDetailsSource(authenticationDetailsSource)
-//                        .permitAll());
 
     }
 

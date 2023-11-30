@@ -1,4 +1,4 @@
-package com.shubham.project.spring_network.dto;
+package com.shubham.project.spring_network.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

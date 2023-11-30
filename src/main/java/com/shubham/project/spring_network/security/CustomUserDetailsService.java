@@ -7,6 +7,7 @@ import com.shubham.project.spring_network.persistence.model.User;
 import com.shubham.project.spring_network.service.AdminService;
 import com.shubham.project.spring_network.service.MemberService;
 import com.shubham.project.spring_network.service.ModeratorService;
+import com.shubham.project.spring_network.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,6 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private AdminService adminSvc;
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = null;
@@ -60,46 +62,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         if (user == null) {
-            return new org.springframework.security.core.userdetails.User(
-                    " ", " ", true, true, true, true,
-                    getAuthorities(Arrays.asList(
-                            roleDAO.findByName("ROLE_USER"))));
+            throw new UsernameNotFoundException("Invalid username / password");
         }
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), user.isEnabled(), true, true,
-                true, getAuthorities(user.getRoles()));
+        return UserDetailsImpl.build(user);
     }
 
-    private Collection< ? extends GrantedAuthority > getAuthorities (final Collection<Role> roles) {
-        return getGrantedAuthorities(getPrivileges(roles));
-    }
-
-    // Return a list of string with all privilege strings
-    private List<String> getPrivileges(final Collection<Role> roles) {
-        List<String> privileges = new ArrayList<>();
-        List<Privilege> collection = new ArrayList<>();
-
-        // Loop through roles and add role name to privilege | Also add role privileges to collection to be used later
-        // to add them as well in privilege list
-        for (Role role: roles) {
-            privileges.add(role.getName());
-            collection.addAll(role.getPrivileges());
-        }
-
-        for (Privilege privilege : collection) {
-            privileges.add(privilege.getName());
-        }
-
-        return privileges;
-    }
-
-    private Collection<? extends GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
-        final List<GrantedAuthority> authorities = new ArrayList<>();
-
-        for (final String privilege : privileges) {
-            authorities.add(new SimpleGrantedAuthority(privilege));
-        }
-        return authorities;
-    }
 }

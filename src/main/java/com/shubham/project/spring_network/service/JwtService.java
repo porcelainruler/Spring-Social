@@ -1,40 +1,69 @@
 package com.shubham.project.spring_network.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtService {
 
-    public static final String JwtSecretKey = "6T74IF5G6A874T47YB84YY488YT987T07TVT08T0980Y98TYY9Y9Y857B8738978B8Y8YV8Y8VYTB89YT89Y888H645455GFHJH";
+    @Value("${jwt.token.validity}")
+    public long TOKEN_VALIDITY;
 
-    public String generateToken (String username) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
-    }
+    @Value("${jwt.signing.key}")
+    public String JWT_SIGNING_KEY;
 
-    private String createToken(Map<String, Object> claims, String username) {
+    @Value("${jwt.authorities.key}")
+    public String AUTHORITIES_KEY;
+
+
+    /* ! Old Token gen logic
+        public String generateToken (String username) {
+            Map<String, Object> claims = new HashMap<>();
+            return createToken(claims, username);
+        }
+
+        private String createToken(Map<String, Object> claims, String username) {
+            return Jwts.builder()
+                    .addClaims(claims)
+                    .setSubject(username)
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                    .signWith(getSignatureKey(), SignatureAlgorithm.HS512).compact();
+        }
+    */
+    public String generateToken (Authentication auth) {
+        String authorities = auth.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
         return Jwts.builder()
-                .addClaims(claims)
-                .setSubject(username)
+                .setSubject(auth.getName())
+                .claim(AUTHORITIES_KEY, authorities)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-                .signWith(getSignatureKey(), SignatureAlgorithm.HS512).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))
+                .signWith(SignatureAlgorithm.HS512, JWT_SIGNING_KEY)
+                .compact();
     }
 
     private Key getSignatureKey() {
-        byte[] keyByteArray = Decoders.BASE64.decode(JwtSecretKey);
+        byte[] keyByteArray = Decoders.BASE64.decode(JWT_SIGNING_KEY);
         return Keys.hmacShaKeyFor(keyByteArray);
     }
 
@@ -56,7 +85,7 @@ public class JwtService {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignatureKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -75,10 +104,22 @@ public class JwtService {
         try {
             final String username = getUsername(token);
 
-            return (username.equals(userDetails.getUsername()) && getExpiration(token).before(new Date()));
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
         } catch (Exception e) {
             // TODO: Log exception
             return false;
         }
+    }
+
+    public UsernamePasswordAuthenticationToken getAuthenticationToken(final String token, final Authentication existingAuth, final UserDetails userDetails) {
+
+        final Claims claims = extractAllClaims(token);
+
+        final Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 }
