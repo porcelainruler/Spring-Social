@@ -1,11 +1,10 @@
 package com.shubham.project.spring_network.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtService {
 
+    private final Logger logger = LoggerFactory.getLogger(JwtService.class);
     @Value("${jwt.token.validity}")
     public long TOKEN_VALIDITY;
 
@@ -105,10 +105,19 @@ public class JwtService {
             final String username = getUsername(token);
 
             return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (MalformedJwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            logger.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            logger.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims string is empty: {}", e.getMessage());
         } catch (Exception e) {
             // TODO: Log exception
-            return false;
+            logger.error("JWT validation failed with error: {}", e.getMessage());
         }
+        return false;
     }
 
     public UsernamePasswordAuthenticationToken getAuthenticationToken(final String token, final Authentication existingAuth, final UserDetails userDetails) {
