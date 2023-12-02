@@ -1,9 +1,6 @@
 package com.shubham.project.spring_network.dto.response;
 
-import lombok.Data;
-
-@Data
-public class ModeratorDTO {
+public class Archived_ModeratorDTOBuilder {
 
     private long id;
 
@@ -19,9 +16,11 @@ public class ModeratorDTO {
 
     private boolean enabled;
 
-    public ModeratorDTO() {
+    public Archived_ModeratorDTOBuilder() {
 
     }
+
+
 
     public static class ModeratorDTOBuilder {
         private long id;
@@ -81,12 +80,12 @@ public class ModeratorDTO {
             return this;
         }
 
-        public ModeratorDTO build () {
-            return new ModeratorDTO(this);
+        public Archived_ModeratorDTOBuilder build () {
+            return new Archived_ModeratorDTOBuilder(this);
         }
     }
 
-    public ModeratorDTO (ModeratorDTOBuilder builder) {
+    public Archived_ModeratorDTOBuilder(ModeratorDTOBuilder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.username = builder.username;
@@ -152,4 +151,3 @@ public class ModeratorDTO {
         this.enabled = enabled;
     }
 }
-

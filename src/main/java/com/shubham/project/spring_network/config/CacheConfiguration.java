@@ -74,12 +74,4 @@ public class CacheConfiguration {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        // Add some specific configuration such as key serializers, etc.
-        return template;
-    }
 }
