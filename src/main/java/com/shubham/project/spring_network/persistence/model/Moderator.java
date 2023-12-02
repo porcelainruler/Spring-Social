@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 
 import java.util.Collection;
 
-@Entity(name = "Moderator")
+@Entity()
 @DiscriminatorValue(value = "M")
 public class Moderator extends User {
 

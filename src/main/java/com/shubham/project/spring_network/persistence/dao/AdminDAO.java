@@ -11,6 +11,8 @@ public interface AdminDAO extends JpaRepository<Admin, Long> {
 
     Admin findByUsername(String username);
 
+    Admin findById (long id);
+
     @Override
     void delete(Admin admin);
 

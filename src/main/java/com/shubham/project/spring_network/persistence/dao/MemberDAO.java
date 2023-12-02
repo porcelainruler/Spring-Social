@@ -10,6 +10,8 @@ public interface MemberDAO extends JpaRepository<Member, Long> {
 
     Member findByUsername(String username);
 
+    Member findById (long id);
+
     @Override
     void delete(Member member);
 
