@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AdminDAO extends JpaRepository<Admin, Long> {
+public interface AdminDAO extends JpaRepository<Admin, Long>, AdminDAOCustom {
     Admin findByEmail(String email);
 
     Admin findByUsername(String username);
