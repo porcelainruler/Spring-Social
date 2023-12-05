@@ -1,5 +1,7 @@
 package com.shubham.project.spring_network.controller;
 
+import com.shubham.project.spring_network.constant.apiResponseStatus;
+import com.shubham.project.spring_network.dto.response.ApiResponse;
 import com.shubham.project.spring_network.dto.response.ModeratorDTO;
 import com.shubham.project.spring_network.persistence.dao.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,16 +49,28 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/moderators")
-    public ResponseEntity<List<ModeratorDTO>> getModerators () {
+    public ResponseEntity<ApiResponse<List<ModeratorDTO>>> getModerators () {
+        ApiResponse<List<ModeratorDTO>> apiResponse = null;
+
         List<ModeratorDTO> result = moderatorDAO.findAllDTO();
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), apiResponseStatus.API_SUCCESS.getValue(), "All valid moderators info fetched successfully", result);
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @GetMapping("/moderator/{id}")
-    public ResponseEntity<ModeratorDTO> getModerator (@RequestParam(name = "id") long id) throws Exception {
+    public ResponseEntity<ApiResponse<ModeratorDTO>> getModerator (@RequestParam(name = "id") long id) throws Exception {
+        ApiResponse<ModeratorDTO> apiResponse = null;
+
         ModeratorDTO modDTO = moderatorDAO.findDTOById(id);
 
-        return new ResponseEntity<>(modDTO, HttpStatus.OK);
+        if (modDTO == null) {
+            apiResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), apiResponseStatus.NOT_FOUND.getValue(), "Moderator with id " + id + " not found.", null);
+            return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+        }
+
+        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), apiResponseStatus.API_SUCCESS.getValue(), "Moderator with id " + id + " info fetched successfully.", modDTO);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }
