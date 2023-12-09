@@ -13,6 +13,6 @@ import java.io.IOException;
 public class LoginSuccessEventHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-
+        System.out.println("Hello");
     }
 }
