@@ -49,6 +49,7 @@ class Member {
     String dateOfJoining;
     Profile profile;
     List <Post> posts;
+    List<Reaction> reactions;
 }
 
 class Profile {
@@ -82,6 +83,7 @@ class Education {
 }
 
 Member "1" *-- "1" Profile : contains
+Member *-- Reaction
 Profile "1" *-- "many" Work
 Profile "1" *-- "many" Education
 
@@ -90,11 +92,11 @@ class Post {
     MediaType mediaItem;
     String description;
     String dateOfCreation;
-    Rating rating;
+    List<Reaction> rating;
     List<Comment> comments;
 }
 
-class Rating {
+enum Rating {
     int likeCount;
     int laughCount;
     int heartCount;
@@ -102,29 +104,40 @@ class Rating {
     int supportCount;
 }
 
+class Reaction {
+    int postId;
+    int userId;
+    Rating rating;
+}
+
+Reaction *-- Rating
+
 class Comment {
     int id;
+    int userId
     String dateOfCreation;
     String message;
-    Rating rating;
+    List<Reaction> reaction;
     List<Reply> replies;
 }
 
 Member "1" *-- "many" Post : create / edit / delete
-Post "1" *-- "1" Rating : has
+Post "1" *-- "1" Reaction : has
 Post "1" *-- "many" Comment : has
 
 class Reply {
     int id;
+    int userId;
     String dateOfCreation;
     String message;
-    Rating rating;
+    List<Reaction> reaction;
     List<Reply> replies;
 }
 
 Comment "1" *-- "many" Reply : has
+Comment *-- Reaction
 Reply "1" *-- "many" Reply : has
-Reply "1" *-- "1" Rating : has
+Reply "1" *-- "1" Reaction : has
 
 
 class Admin {

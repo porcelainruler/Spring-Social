@@ -1,5 +1,8 @@
 package com.shubham.project.spring_network.jobs;
 
+import com.shubham.project.spring_network.constant.AccountStatus;
+import com.shubham.project.spring_network.constant.Platform;
+import com.shubham.project.spring_network.constant.UserType;
 import com.shubham.project.spring_network.persistence.dao.*;
 import com.shubham.project.spring_network.persistence.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
 
     @Autowired
     private PrivilegeDAO privilegeDAO;
+
+    @Autowired
+    private AccountDAO accountDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -102,9 +108,18 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
             moderatorRoles.add(moderatorRole);
             adminRoles.add(adminRole);
 
-            Member m1 = new Member("U", "user1", passwordEncoder.encode("test123"), "shubham", "shubham@springsocial.com", "(+91) 7011012392", "NA", true, memberRoles);
-            Moderator m2 = new Moderator("M", "moderator1", passwordEncoder.encode("test123"), "mohan", "mohan@springsocial.com", "(+91) 9912345643", "NA", true, moderatorRoles);
-            Admin m3 = new Admin("A", "admin1", passwordEncoder.encode("test123"), "alex", "alex@springsocial.com", "(+91) 5467112321", "NA", true, adminRoles);
+            // * Account setup
+            Account userAccount = new Account(Platform.SPRING_SOCIAL, "user1", "shubham@springsocial.com", "(+91) 7011012392", AccountStatus.ENABLED, UserType.MEMBER);
+            Account moderatorAccount = new Account(Platform.SPRING_SOCIAL, "moderator1", "mohan@springsocial.com", "(+91) 9912345643", AccountStatus.ENABLED, UserType.MODERATOR);
+            Account adminAccount = new Account(Platform.SPRING_SOCIAL, "admin1", "alex@springsocial.com", "(+91) 5467112321", AccountStatus.ENABLED, UserType.ADMIN);
+
+            if ( accountDAO.findByEmail("shubham@springsocial.com") == null ) accountDAO.save(userAccount);
+            if ( accountDAO.findByEmail("mohan@springsocial.com") == null ) accountDAO.save(moderatorAccount);
+            if ( accountDAO.findByEmail("alex@springsocial.com") == null ) accountDAO.save(adminAccount);
+
+            Member m1 = new Member("U", "user1", passwordEncoder.encode("test123"), "shubham", "shubham@springsocial.com", "(+91) 7011012392", "NA", true, memberRoles, userAccount);
+            Moderator m2 = new Moderator("M", "moderator1", passwordEncoder.encode("test123"), "mohan", "mohan@springsocial.com", "(+91) 9912345643", "NA", true, moderatorRoles, moderatorAccount);
+            Admin m3 = new Admin("A", "admin1", passwordEncoder.encode("test123"), "alex", "alex@springsocial.com", "(+91) 5467112321", "NA", true, adminRoles, adminAccount);
 
             if ( memberDAO.findByEmail("shubham@springsocial.com") == null ) memberDAO.save(m1);
             if ( moderatorDAO.findByEmail("mohan@springsocial.com") == null ) moderatorDAO.save(m2);

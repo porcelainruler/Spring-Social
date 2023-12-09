@@ -1,6 +1,6 @@
 package com.shubham.project.spring_network.exceptions;
 
-import com.shubham.project.spring_network.constant.apiResponseStatus;
+import com.shubham.project.spring_network.constant.ApiResponseStatus;
 import com.shubham.project.spring_network.dto.response.ApiResponse;
 import com.shubham.project.spring_network.dto.response.ExceptionResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -51,7 +50,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         String requestUri = ((ServletWebRequest)request).getRequest().getRequestURI().toString();
         ExceptionResponse exceptionMessage = new ExceptionResponse(ex.getMessage(), requestUri);
 
-        apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN.value(), apiResponseStatus.ACCESS_DENIED.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.FORBIDDEN));
+        apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN.value(), ApiResponseStatus.ACCESS_DENIED.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.FORBIDDEN));
 
         return apiResponse;
     }
@@ -69,7 +68,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         String requestUri = "NA";
         ExceptionResponse exceptionMessage = new ExceptionResponse(ex.getMessage(), requestUri);
 
-        apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN.value(), apiResponseStatus.ACCESS_DENIED.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.FORBIDDEN));
+        apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN.value(), ApiResponseStatus.ACCESS_DENIED.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.FORBIDDEN));
 
         return apiResponse;
     }
@@ -99,7 +98,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         String requestUri = ((ServletWebRequest)request).getRequest().getRequestURI().toString();
         ExceptionResponse exceptionMessage = new ExceptionResponse(ex.getMessage(), requestUri);
 
-        apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN.value(), apiResponseStatus.ACCESS_DENIED.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.FORBIDDEN));
+        apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN.value(), ApiResponseStatus.ACCESS_DENIED.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.FORBIDDEN));
 
         return apiResponse;
     }
@@ -117,7 +116,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         String requestUri = ((ServletWebRequest)request).getRequest().getRequestURI().toString();
         ExceptionResponse exceptionMessage = new ExceptionResponse(ex.getMessage(), requestUri);
 
-        apiResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), apiResponseStatus.INTERNAL_SERVER_ERROR.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR));
+        apiResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), ApiResponseStatus.INTERNAL_SERVER_ERROR.getValue(), "Global exception caught", new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR));
 
         return apiResponse;
     }

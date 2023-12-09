@@ -1,6 +1,6 @@
 package com.shubham.project.spring_network.controller;
 
-import com.shubham.project.spring_network.constant.apiResponseStatus;
+import com.shubham.project.spring_network.constant.ApiResponseStatus;
 import com.shubham.project.spring_network.dto.request.AuthRequest;
 import com.shubham.project.spring_network.dto.response.ApiResponse;
 import com.shubham.project.spring_network.dto.response.JwtResponse;
@@ -15,8 +15,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +51,7 @@ public class AuthController {
 
         JwtResponse response = new JwtResponse(token, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
 
-        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), apiResponseStatus.API_SUCCESS.getValue(), "User logged in successfully.", response);
+        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), ApiResponseStatus.API_SUCCESS.getValue(), "User logged in successfully.", response);
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }

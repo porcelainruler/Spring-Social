@@ -1,6 +1,6 @@
 package com.shubham.project.spring_network.controller;
 
-import com.shubham.project.spring_network.constant.apiResponseStatus;
+import com.shubham.project.spring_network.constant.ApiResponseStatus;
 import com.shubham.project.spring_network.dto.response.ApiResponse;
 import com.shubham.project.spring_network.dto.response.ModeratorDTO;
 import com.shubham.project.spring_network.persistence.dao.*;
@@ -54,7 +54,7 @@ public class AdminController {
 
         List<ModeratorDTO> result = moderatorDAO.findAllDTO();
 
-        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), apiResponseStatus.API_SUCCESS.getValue(), "All valid moderators info fetched successfully", result);
+        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), ApiResponseStatus.API_SUCCESS.getValue(), "All valid moderators info fetched successfully", result);
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
@@ -66,11 +66,11 @@ public class AdminController {
         ModeratorDTO modDTO = moderatorDAO.findDTOById(id);
 
         if (modDTO == null) {
-            apiResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), apiResponseStatus.NOT_FOUND.getValue(), "Moderator with id " + id + " not found.", null);
+            apiResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), ApiResponseStatus.NOT_FOUND.getValue(), "Moderator with id " + id + " not found.", null);
             return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
         }
 
-        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), apiResponseStatus.API_SUCCESS.getValue(), "Moderator with id " + id + " info fetched successfully.", modDTO);
+        apiResponse = new ApiResponse<>(HttpStatus.OK.value(), ApiResponseStatus.API_SUCCESS.getValue(), "Moderator with id " + id + " info fetched successfully.", modDTO);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

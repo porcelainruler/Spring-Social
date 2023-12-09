@@ -2,6 +2,7 @@ package com.shubham.project.spring_network.persistence.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.DiscriminatorFormula;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -44,10 +45,16 @@ public class User implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updatedAt")
     private Date updatedAt;
 
     private String secret;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @ManyToMany
     @JoinTable(name = "users_roles",
@@ -61,7 +68,7 @@ public class User implements Serializable {
         this.secret = "secret123";
     }
 
-    public User(String type, String username, String password, String name, String email, String phone, String address, boolean enabled, Collection<Role> roles) {
+    public User(String type, String username, String password, String name, String email, String phone, String address, boolean enabled, Collection<Role> roles, Account account) {
         this.type = type;
         this.username = username;
         this.password = password;
@@ -72,6 +79,7 @@ public class User implements Serializable {
         this.enabled = enabled;
         this.updatedAt = new Date();
         this.roles = roles;
+        this.account = account;
     }
 
     public long getId() {
