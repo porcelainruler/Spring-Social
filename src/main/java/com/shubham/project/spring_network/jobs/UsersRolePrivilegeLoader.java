@@ -2,6 +2,7 @@ package com.shubham.project.spring_network.jobs;
 
 import com.shubham.project.spring_network.constant.AccountStatus;
 import com.shubham.project.spring_network.constant.Platform;
+import com.shubham.project.spring_network.constant.Rating;
 import com.shubham.project.spring_network.constant.UserType;
 import com.shubham.project.spring_network.persistence.dao.*;
 import com.shubham.project.spring_network.persistence.model.*;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -38,6 +40,12 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
 
     @Autowired
     private AccountDAO accountDAO;
+
+    @Autowired
+    private PostDAO postDAO;
+
+    @Autowired
+    private ReactionDAO reactionDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -124,6 +132,10 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
             if ( memberDAO.findByEmail("shubham@springsocial.com") == null ) memberDAO.save(m1);
             if ( moderatorDAO.findByEmail("mohan@springsocial.com") == null ) moderatorDAO.save(m2);
             if ( adminDAO.findByEmail("alex@springsocial.com") == null ) adminDAO.save(m3);
+
+            // * Create post for member
+            createPostForUser(m1);
+
             //        List<Member> members = memberDAO.findAll();
             //
             //        for (Member member: members) {
@@ -148,6 +160,35 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
     private void loadAllAdmins () {
         List<Admin> admins = adminDAO.findAll();
 
+    }
+
+    @Transactional
+    private void createPostForUser (User user) {
+        Post temp = postDAO.findById((long)1);
+        if (temp == null) {
+            Post post = new Post(user, "New post for testing", new Date(), new Date());
+
+            postDAO.save(post);
+
+            Reaction reaction1 = new Reaction(user, post, Rating.LIKE);
+            Reaction reaction2 = new Reaction(user, post, Rating.LIKE);
+            Reaction reaction3 = new Reaction(user, post, Rating.CRY);
+            Reaction reaction4 = new Reaction(user, post, Rating.ANGRY);
+            Reaction reaction5 = new Reaction(user, post, Rating.HEART);
+            Reaction reaction6 = new Reaction(user, post, Rating.LAUGH);
+            Reaction reaction7 = new Reaction(user, post, Rating.SUPPORT);
+
+            reactionDAO.save(reaction1);
+            reactionDAO.save(reaction2);
+            reactionDAO.save(reaction3);
+            reactionDAO.save(reaction4);
+            reactionDAO.save(reaction5);
+            reactionDAO.save(reaction6);
+            reactionDAO.save(reaction7);
+
+            List<Post> fetchPost = postDAO.findAll();
+            System.out.println(fetchPost);
+        }
     }
 }
 

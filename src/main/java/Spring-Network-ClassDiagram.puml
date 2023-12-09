@@ -49,7 +49,7 @@ class Member {
     String dateOfJoining;
     Profile profile;
     List <Post> posts;
-    List<Reaction> reactions;
+'    List<Reaction> reactions;
 }
 
 class Profile {
@@ -97,11 +97,12 @@ class Post {
 }
 
 enum Rating {
-    int likeCount;
-    int laughCount;
-    int heartCount;
-    int angryCount;
-    int supportCount;
+    LIKE (1);
+    LAUGH (2);
+    HEART (3);
+    ANGRY (4);
+    SUPPORT (5);
+    CRY (6);
 }
 
 class Reaction {
