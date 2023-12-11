@@ -8,5 +8,5 @@ public interface PostDAO extends JpaRepository<Post, Long> {
     Post findById (long id);
 
     @Override
-    void delete(Post member);
+    void delete(Post post);
 }

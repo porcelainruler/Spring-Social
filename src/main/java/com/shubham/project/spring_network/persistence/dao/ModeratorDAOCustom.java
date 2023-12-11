@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ModeratorDAOCustom {
-    @Cacheable(value = "moderator-dto")
+
+    //    @Cacheable(value = "moderator-dto")
     ModeratorDTO findDTOById (long id);
 
     List<ModeratorDTO> findAllDTO();

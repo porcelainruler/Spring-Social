@@ -1,6 +1,7 @@
 package com.shubham.project.spring_network.persistence.model;
 
 import com.shubham.project.spring_network.constant.Rating;
+import com.shubham.project.spring_network.constant.ReactionType;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -19,9 +20,22 @@ public class Reaction {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="post_id", nullable = false)
+    @JoinColumn(name="post_id", nullable = true)
     //    @MapsId("id")
     private Post post;
+
+    @ManyToOne
+    @JoinColumn(name="comment_id", nullable = true, referencedColumnName = "id")
+    private Comment comment;
+
+    @ManyToOne
+    @JoinColumn(name="reply_id", nullable = true, referencedColumnName = "id")
+    private Reply reply;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reactionType")
+    private ReactionType reactionType;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rating")
@@ -31,10 +45,13 @@ public class Reaction {
 
     }
 
-    public Reaction(User user, Post post, Rating rating) {
+    public Reaction(User user, Post post, Rating rating, Comment comment, Reply reply, ReactionType reactionType) {
         this.user = user;
         this.post = post;
         this.rating = rating;
+        this.comment = comment;
+        this.reply = reply;
+        this.reactionType = reactionType;
     }
 
     public long getId() {

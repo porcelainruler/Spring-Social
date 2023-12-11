@@ -1,11 +1,9 @@
 package com.shubham.project.spring_network.jobs;
 
-import com.shubham.project.spring_network.constant.AccountStatus;
-import com.shubham.project.spring_network.constant.Platform;
-import com.shubham.project.spring_network.constant.Rating;
-import com.shubham.project.spring_network.constant.UserType;
+import com.shubham.project.spring_network.constant.*;
 import com.shubham.project.spring_network.persistence.dao.*;
 import com.shubham.project.spring_network.persistence.model.*;
+import jakarta.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -48,6 +46,12 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
     private ReactionDAO reactionDAO;
 
     @Autowired
+    private CommentDAO commentDAO;
+
+    @Autowired
+    private ReplyDAO replyDAO;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -59,6 +63,14 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
         loadAllMembers();
         loadAllModerators();
         loadAllAdmins();
+
+        // * Testing code
+        List<Post> fetchPost = postDAO.findAll();
+        System.out.println(fetchPost);
+
+        Member mFetch1 = memberDAO.findById(1);
+        //        System.out.println(mFetch1.getReactions().size());
+        System.out.println(mFetch1);
     }
 
     @Transactional
@@ -125,7 +137,7 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
             if ( accountDAO.findByEmail("mohan@springsocial.com") == null ) accountDAO.save(moderatorAccount);
             if ( accountDAO.findByEmail("alex@springsocial.com") == null ) accountDAO.save(adminAccount);
 
-            Member m1 = new Member("U", "user1", passwordEncoder.encode("test123"), "shubham", "shubham@springsocial.com", "(+91) 7011012392", "NA", true, memberRoles, userAccount);
+            Member m1 = new Member("U", "user1", passwordEncoder.encode("test123"), "shubham", "shubham@springsocial.com", "(+91) 7011012392", "NA", true, memberRoles, userAccount, null, null);
             Moderator m2 = new Moderator("M", "moderator1", passwordEncoder.encode("test123"), "mohan", "mohan@springsocial.com", "(+91) 9912345643", "NA", true, moderatorRoles, moderatorAccount);
             Admin m3 = new Admin("A", "admin1", passwordEncoder.encode("test123"), "alex", "alex@springsocial.com", "(+91) 5467112321", "NA", true, adminRoles, adminAccount);
 
@@ -134,7 +146,7 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
             if ( adminDAO.findByEmail("alex@springsocial.com") == null ) adminDAO.save(m3);
 
             // * Create post for member
-            createPostForUser(m1);
+            if (postDAO.findById((long)3) == null) createPostForUser(m1);
 
             //        List<Member> members = memberDAO.findAll();
             //
@@ -170,13 +182,13 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
 
             postDAO.save(post);
 
-            Reaction reaction1 = new Reaction(user, post, Rating.LIKE);
-            Reaction reaction2 = new Reaction(user, post, Rating.LIKE);
-            Reaction reaction3 = new Reaction(user, post, Rating.CRY);
-            Reaction reaction4 = new Reaction(user, post, Rating.ANGRY);
-            Reaction reaction5 = new Reaction(user, post, Rating.HEART);
-            Reaction reaction6 = new Reaction(user, post, Rating.LAUGH);
-            Reaction reaction7 = new Reaction(user, post, Rating.SUPPORT);
+            Reaction reaction1 = new Reaction(user, post, Rating.LIKE, null, null, ReactionType.POST);
+            Reaction reaction2 = new Reaction(user, post, Rating.LIKE, null, null, ReactionType.POST);
+            Reaction reaction3 = new Reaction(user, post, Rating.CRY, null, null, ReactionType.POST);
+            Reaction reaction4 = new Reaction(user, post, Rating.ANGRY, null, null, ReactionType.POST);
+            Reaction reaction5 = new Reaction(user, post, Rating.HEART, null, null, ReactionType.POST);
+            Reaction reaction6 = new Reaction(user, post, Rating.LAUGH, null, null, ReactionType.POST);
+            Reaction reaction7 = new Reaction(user, post, Rating.SUPPORT, null, null, ReactionType.POST);
 
             reactionDAO.save(reaction1);
             reactionDAO.save(reaction2);
@@ -186,9 +198,27 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
             reactionDAO.save(reaction6);
             reactionDAO.save(reaction7);
 
-            List<Post> fetchPost = postDAO.findAll();
-            System.out.println(fetchPost);
+            createCommentReplyForPost(user, post, "NA");
         }
+    }
+
+    @Transactional
+    private void createCommentReplyForPost (User user, Post post, String message) {
+        Comment com1 = new Comment(user, post, "Looks like a good post", null, null);
+        Comment com2 = new Comment(user, post, "Finally a +ve post", null, null);
+
+        commentDAO.save(com1);
+        commentDAO.save(com2);
+
+        Reaction react1 = new Reaction(user, null, Rating.LIKE, com1, null, ReactionType.COMMENT);
+        Reaction react2 = new Reaction(user, null, Rating.HEART, com1, null, ReactionType.COMMENT);
+        Reaction react3 = new Reaction(user, null, Rating.SUPPORT, com2, null, ReactionType.COMMENT);
+        Reaction react4 = new Reaction(user, null, Rating.LIKE, com2, null, ReactionType.COMMENT);
+
+        reactionDAO.save(react1);
+        reactionDAO.save(react2);
+        reactionDAO.save(react3);
+        reactionDAO.save(react4);
     }
 }
 

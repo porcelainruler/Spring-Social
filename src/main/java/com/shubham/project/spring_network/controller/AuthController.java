@@ -7,6 +7,9 @@ import com.shubham.project.spring_network.dto.response.JwtResponse;
 import com.shubham.project.spring_network.security.CustomUserDetailsService;
 import com.shubham.project.spring_network.service.JwtService;
 import com.shubham.project.spring_network.service.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Auth Group", description = "A group of authentication apis")
 @RestController
 @RequestMapping(path = "${apiPrefixV1}/auth")
 public class AuthController {
+    // * Logger
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private JwtService jwtService;

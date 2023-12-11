@@ -21,7 +21,26 @@ public class Member extends User {
         super();
     }
 
-    public Member(String type, String username, String password, String name, String email, String phone, String address, boolean enabled, Collection<Role> roles, Account account) {
+    public Member(String type, String username, String password, String name, String email, String phone, String address, boolean enabled, Collection<Role> roles, Account account, Set<Post> posts, Set<Reaction> reactions) {
         super(type, username, password, name, email, phone, address, enabled, roles, account);
+
+        this.posts = posts;
+        this.reactions = reactions;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
+
+    public Set<Reaction> getReactions() {
+        return reactions;
+    }
+
+    public void setReactions(Set<Reaction> reactions) {
+        this.reactions = reactions;
     }
 }

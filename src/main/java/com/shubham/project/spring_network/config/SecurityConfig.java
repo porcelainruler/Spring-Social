@@ -1,6 +1,7 @@
 package com.shubham.project.spring_network.config;
 
 
+// import com.shubham.project.spring_network.filter.ExceptionHandlerFilter;
 import com.shubham.project.spring_network.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,9 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter filter;
 
+    // @Autowired
+    // private ExceptionHandlerFilter exceptionFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // ! Old filter chain with ui based basic auth
@@ -75,6 +79,7 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        // http.addFilterBefore(exceptionFilter, JwtAuthFilter.class);
         return http.build();
 
     }
