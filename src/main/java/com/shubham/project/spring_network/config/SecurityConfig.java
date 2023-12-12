@@ -68,13 +68,13 @@ public class SecurityConfig {
 
         // ! Filter chain for JAVA jwt based Backend Service
         http
-            .authorizeHttpRequests(auth -> {
-                auth.requestMatchers("/api/v1/auth/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                    .anyRequest().authenticated();
-            })
             .csrf(AbstractHttpConfigurer::disable)
             .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+            .authorizeHttpRequests(auth -> {
+                auth.requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated();
+            })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authenticationProvider(authenticationProvider());

@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
     @Override
+    @ResponseBody
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
                                                                   HttpStatusCode status, WebRequest request) {
         Map<String, List<String>> body = new HashMap<>();
@@ -74,6 +75,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     //    @ExceptionHandler(BadCredentialsException.class)
+    //    @ResponseBody
     //    public ApiResponse<ResponseEntity<Object>> exceptionHandler(Exception ex) {
     //        ApiResponse<ResponseEntity<Object>> apiResponse = null;
     //
@@ -92,6 +94,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = {ExpiredJwtException.class})
+    @ResponseBody
     public ApiResponse<ResponseEntity<Object>> handleExpiredJwtException(ExpiredJwtException ex, WebRequest request) {
         ApiResponse<ResponseEntity<Object>> apiResponse = null;
 
@@ -110,6 +113,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = {Exception.class})
+    @ResponseBody
     public ApiResponse<ResponseEntity<Object>> handleOtherExceptions(Exception ex, WebRequest request) {
         ApiResponse<ResponseEntity<Object>> apiResponse = null;
 
