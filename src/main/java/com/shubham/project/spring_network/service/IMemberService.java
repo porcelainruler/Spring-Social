@@ -17,7 +17,7 @@ public interface IMemberService extends IUserService{
 
     public MemberDTO createMember (MemberCreateDTO memberDTO) throws Exception;
 
-    public MemberDTO updateMember (MemberCreateDTO memberDTO) throws UserNotFoundException;
+    public MemberDTO updateMember (MemberCreateDTO memberDTO) throws Exception;
 
-    public boolean deleteMember (long id);
+    public boolean deleteMember (long id) throws UserNotFoundException;
 }

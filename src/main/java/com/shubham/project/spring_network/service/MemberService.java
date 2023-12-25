@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class MemberService implements IMemberService {
     private final AccountDAO accountDAO;
 
     // * Model mapper
-    private final IDTOMapper modelMapperCustom;
+    private final IDTOMapper<Member, MemberDTO> modelMapperCustom;
 
     // * Password encoder
     private final PasswordEncoder passwordEncoder;
@@ -95,16 +96,45 @@ public class MemberService implements IMemberService {
         Member member = new Member("U", memberDTO.getUsername(), passwordEncoder.encode(memberDTO.getPassword()), memberDTO.getName(), memberDTO.getEmail(), memberDTO.getPhone(), memberDTO.getAddress(), true, roles, account, null, null);
         memberDAO.save(member);
 
-        return (MemberDTO) this.modelMapperCustom.toDTO(member);
+        return this.modelMapperCustom.toDTO(member);
     }
 
     @Override
-    public MemberDTO updateMember(MemberCreateDTO memberDTO) throws UserNotFoundException {
-        return null;
+    public MemberDTO updateMember(MemberCreateDTO memberDTO) throws Exception {
+
+        Member existMember = memberDAO.findByEmail(memberDTO.getEmail());
+
+        if (existMember == null) {
+            throw new UserNotFoundException("No member exist with email " + memberDTO.getEmail());
+        }
+
+        // Update user basic details as per request body | Only those fields whose update is supported
+        existMember.setName(memberDTO.getName());
+        existMember.setUsername(memberDTO.getUsername());
+        existMember.setUpdatedAt(new Date());
+        existMember.setAddress(memberDTO.getAddress());
+        existMember.setEnabled(memberDTO.isEnabled());
+
+        // Update account status - Not supported yet
+
+        // Persist in db
+        memberDAO.save(existMember);
+
+        return modelMapperCustom.toDTO(existMember);
     }
 
     @Override
-    public boolean deleteMember(long id) {
-        return false;
+    public boolean deleteMember(long id) throws UserNotFoundException {
+        Member member = memberDAO.findById(id);
+
+        if (member == null) {
+            throw new UserNotFoundException("No member exist with id " + id);
+        }
+
+        // TODO: Add other mappings cleanup logic
+
+        memberDAO.delete(member);
+
+        return true;
     }
 }

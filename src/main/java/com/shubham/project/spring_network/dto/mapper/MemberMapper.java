@@ -7,18 +7,17 @@ import com.shubham.project.spring_network.persistence.model.Role;
 
 import java.util.stream.Collectors;
 
-public class MemberMapper implements IDTOMapper {
+public class MemberMapper implements IDTOMapper<Member, MemberDTO> {
     @Override
-    public Object toEntity(Object dto) throws Exception {
+    public Member toEntity(MemberDTO dto) throws Exception {
         return null;
     }
 
     @Override
-    public Object toDTO(Object entity) throws Exception {
-        if (!(entity instanceof Member)) {
-            throw new Exception("Invalid input parameter dto, dto object passed must be an instance of " + Member.class);
+    public MemberDTO toDTO(Member member) throws Exception {
+        if (member == null) {
+            throw new Exception("Invalid input parameter member, member object passed must not be null and an instance of " + Member.class);
         }
-        Member member = (Member) entity;
 
         MemberDTO memberDTO = MemberDTO.builder()
                 .id(member.getId())

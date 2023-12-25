@@ -76,7 +76,7 @@ public class MemberController {
 
     @PreAuthorize("hasAnyRole('MODERATOR','ADMIN')")
     @PutMapping("/member")
-    public ApiResponse<MemberDTO> updateMember (@RequestBody MemberCreateDTO member) throws UserNotFoundException {
+    public ApiResponse<MemberDTO> updateMember (@RequestBody MemberCreateDTO member) throws Exception {
         ApiResponse<MemberDTO> response = null;
 
         MemberDTO memberDTO = memberService.updateMember(member);
@@ -90,8 +90,12 @@ public class MemberController {
 
     @PreAuthorize("hasAnyRole('MODERATOR','ADMIN')")
     @DeleteMapping("/member/{id}")
-    public ApiResponse<MemberDTO> deleteMember (@RequestParam long id) {
-        return null;
+    public ApiResponse<Boolean> deleteMember (@RequestParam long id) throws UserNotFoundException {
+        boolean isDeleted = memberService.deleteMember(id);
+
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>(HttpStatus.ACCEPTED.value(), ApiResponseStatus.API_SUCCESS.getValue(), "Member deleted successfully with response: " + isDeleted, isDeleted);
+
+        return apiResponse;
     }
 
 }

@@ -8,22 +8,21 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.stream.Collectors;
 
-public class ModeratorMapper implements IDTOMapper {
+public class ModeratorMapper implements IDTOMapper<Moderator, ModeratorDTO> {
 
     @Override
-    public Object toEntity(Object dto) throws Exception {
-        if (!(dto instanceof ModeratorDTO)) {
+    public Moderator toEntity(ModeratorDTO dto) throws Exception {
+        if (dto == null) {
             throw new Exception("Invalid input parameter dto, dto object passed must be an instance of " + ModeratorDTO.class);
         }
         return null;
     }
 
     @Override
-    public Object toDTO(Object entity) throws Exception {
-        if (!(entity instanceof Moderator)) {
-            throw new Exception("Invalid input parameter dto, dto object passed must be an instance of " + Moderator.class);
+    public ModeratorDTO toDTO(Moderator moderator) throws Exception {
+        if (moderator == null) {
+            throw new Exception("Invalid input object moderator, moderator object passed must not be null and an instance of " + Moderator.class);
         }
-        Moderator moderator = (Moderator)entity;
 
         ModeratorDTO moderatorDTO = ModeratorDTO.builder()
                 .id(moderator.getId())

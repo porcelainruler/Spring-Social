@@ -17,7 +17,7 @@ public class MemberDAOImpl implements MemberDAOCustom {
 
     private final MemberDAO memberDAO;
 
-    private final IDTOMapper modelMapperCustom;
+    private final IDTOMapper<Member, MemberDTO> modelMapperCustom;
 
     @Autowired
     @Lazy
@@ -31,7 +31,7 @@ public class MemberDAOImpl implements MemberDAOCustom {
         Member member = memberDAO.findById(id);
 
         if (member != null) {
-            return (MemberDTO) modelMapperCustom.toDTO(member);
+            return modelMapperCustom.toDTO(member);
         }
 
         return null;
@@ -43,7 +43,7 @@ public class MemberDAOImpl implements MemberDAOCustom {
 
         return members.stream().map(member -> {
             try {
-                return (MemberDTO)modelMapperCustom.toDTO(member);
+                return modelMapperCustom.toDTO(member);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

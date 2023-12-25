@@ -23,7 +23,7 @@ public class ModeratorDAOImpl implements ModeratorDAOCustom {
 
     private final ModeratorDAO moderatorDAO;
 
-    private final IDTOMapper modelMapperCustom;
+    private final IDTOMapper<Moderator, ModeratorDTO> modelMapperCustom;
 
     @Autowired
     @Lazy
@@ -49,7 +49,7 @@ public class ModeratorDAOImpl implements ModeratorDAOCustom {
                         .build();
             */
 
-            return (ModeratorDTO) modelMapperCustom.toDTO(moderator);
+            return modelMapperCustom.toDTO(moderator);
 
         }
 
@@ -80,7 +80,7 @@ public class ModeratorDAOImpl implements ModeratorDAOCustom {
 
         return moderators.stream().map(moderator -> {
             try {
-                return (ModeratorDTO)modelMapperCustom.toDTO(moderator);
+                return modelMapperCustom.toDTO(moderator);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

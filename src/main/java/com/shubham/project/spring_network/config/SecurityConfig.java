@@ -45,6 +45,9 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter filter;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // @Autowired
     // private ExceptionHandlerFilter exceptionFilter;
 
@@ -95,10 +98,10 @@ public class SecurityConfig {
     }
 
     /* *---------------------------------------- Pwd Encoder Beans ------------------------------------------------- */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(11);
+//    }
 
     /* *--------------------------------------- Authentication Beans ------------------------------------------------ */
     //    @Bean
@@ -111,7 +114,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider () {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
