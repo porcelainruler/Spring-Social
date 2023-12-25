@@ -1,18 +1,17 @@
-package com.shubham.project.spring_network.dto.response;
+package com.shubham.project.spring_network.dto.request;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@Builder
-public class MemberDTO {
-    private long id;
+public class MemberCreateDTO {
 
     private String name;
 
     private String username;
+
+    private String password;
 
     private String email;
 
@@ -28,5 +27,4 @@ public class MemberDTO {
 
     private List<String> roles;
 
-    private List<String> privileges;
 }

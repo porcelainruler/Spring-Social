@@ -1,14 +1,11 @@
-package com.shubham.project.spring_network.dto.response;
+package com.shubham.project.spring_network.dto.request;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@Builder
-public class MemberDTO {
-    private long id;
+public class ModeratorCreateDTO {
 
     private String name;
 

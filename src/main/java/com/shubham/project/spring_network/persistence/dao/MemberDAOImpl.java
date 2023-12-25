@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class MemberDAOImpl implements MemberDAOCustom {
 
-    private MemberDAO memberDAO;
+    private final MemberDAO memberDAO;
 
-    private IDTOMapper modelMapperCustom;
+    private final IDTOMapper modelMapperCustom;
 
     @Autowired
     @Lazy

@@ -1,6 +1,5 @@
 package com.shubham.project.spring_network.dto.response;
 
-import com.shubham.project.spring_network.constant.Platform;
 import lombok.Builder;
 import lombok.Data;
 

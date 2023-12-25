@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 
 public class ModeratorDAOImpl implements ModeratorDAOCustom {
 
-    private ModeratorDAO moderatorDAO;
+    private final ModeratorDAO moderatorDAO;
 
-    private IDTOMapper modelMapperCustom;
+    private final IDTOMapper modelMapperCustom;
 
     @Autowired
     @Lazy
