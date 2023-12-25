@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,29 +32,47 @@ public class ModeratorController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/moderators")
-    public ResponseEntity<ApiResponse<List<ModeratorDTO>>> getModerators () {
+    public ApiResponse<List<ModeratorDTO>> getModerators () {
         ApiResponse<List<ModeratorDTO>> apiResponse = null;
 
         List<ModeratorDTO> result = moderatorService.findAllDTO();
 
         apiResponse = new ApiResponse<>(HttpStatus.OK.value(), ApiResponseStatus.API_SUCCESS.getValue(), "All valid moderators info fetched successfully", result);
 
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return apiResponse;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/moderator/{id}")
-    public ResponseEntity<ApiResponse<ModeratorDTO>> getModerator (@RequestParam(name = "id") long id) throws Exception {
+    public ApiResponse<ModeratorDTO> getModerator (@RequestParam(name = "id") long id) throws Exception {
         ApiResponse<ModeratorDTO> apiResponse = null;
 
         ModeratorDTO modDTO = moderatorService.findDTOById(id);
 
         if (modDTO == null) {
             apiResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), ApiResponseStatus.NOT_FOUND.getValue(), "Moderator with id " + id + " not found.", null);
-            return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+            return apiResponse;
         }
 
         apiResponse = new ApiResponse<>(HttpStatus.OK.value(), ApiResponseStatus.API_SUCCESS.getValue(), "Moderator with id " + id + " info fetched successfully.", modDTO);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return apiResponse;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/moderator")
+    public ApiResponse<ModeratorDTO> createModerator (@RequestBody ModeratorDTO moderatorDTO) {
+        return null;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/moderator")
+    public ApiResponse<ModeratorDTO> updateModerator (@RequestBody ModeratorDTO moderatorDTO) {
+        return null;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/moderator/{id}")
+    public ApiResponse<String> deleteModerator (@RequestParam long id) {
+        return null;
     }
 }

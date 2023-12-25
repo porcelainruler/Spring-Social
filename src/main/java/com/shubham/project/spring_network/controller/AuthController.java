@@ -7,6 +7,8 @@ import com.shubham.project.spring_network.dto.response.JwtResponse;
 import com.shubham.project.spring_network.security.CustomUserDetailsService;
 import com.shubham.project.spring_network.service.JwtService;
 import com.shubham.project.spring_network.service.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

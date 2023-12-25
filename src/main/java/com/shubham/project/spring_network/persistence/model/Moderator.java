@@ -10,6 +10,7 @@ import java.util.Collection;
 public class Moderator extends User {
 
     public Moderator() {
+        super();
     }
 
     public Moderator(String type, String username, String password, String name, String email, String phone, String address, boolean enabled, Collection<Role> roles, Account account) {
