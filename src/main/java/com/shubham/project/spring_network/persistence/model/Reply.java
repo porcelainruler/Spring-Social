@@ -1,5 +1,7 @@
 package com.shubham.project.spring_network.persistence.model;
 
+import com.shubham.project.spring_network.constant.ReactionType;
+import com.shubham.project.spring_network.constant.ReplyType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -37,6 +39,10 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     private Set<Reaction> reactions;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "replyType")
+    private ReplyType replyType;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dateOfCreation")
@@ -58,7 +64,7 @@ public class Reply {
 
     }
 
-    public Reply(User user, Post post, String message, Set<Reaction> reactions, Reply parentReply, Set<Reply> childReplies) {
+    public Reply(User user, Post post, String message, Set<Reaction> reactions, Reply parentReply, Set<Reply> childReplies, ReplyType replyType) {
         this.user = user;
         this.post = post;
         this.message = message;
@@ -67,6 +73,7 @@ public class Reply {
         this.updatedAt = new Date();
         this.parentReply = parentReply;
         this.childReplies = childReplies;
+        this.replyType = replyType;
     }
 
     public Reply(User user, Post post, String message, Set<Reaction> reactions, Date dateOfCreation, Date updatedAt, Reply parentReply, Set<Reply> childReplies) {
@@ -118,6 +125,22 @@ public class Reply {
 
     public void setReactions(Set<Reaction> reactions) {
         this.reactions = reactions;
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public ReplyType getReplyType() {
+        return replyType;
+    }
+
+    public void setReplyType(ReplyType replyType) {
+        this.replyType = replyType;
     }
 
     public Date getDateOfCreation() {

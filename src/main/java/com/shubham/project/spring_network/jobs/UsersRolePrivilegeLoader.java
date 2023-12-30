@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -146,8 +143,10 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
             if ( adminDAO.findByEmail("alex@springsocial.com") == null ) adminDAO.save(m3);
 
             // * Create post for member
-            if (postDAO.findById((long)3) == null) createPostForUser(m1);
+            if (postDAO.findById((long)1) == null) createPostForUser(m1);
 
+            // Post post = postDAO.findById((long)1);
+            // System.out.println(post);
             //        List<Member> members = memberDAO.findAll();
             //
             //        for (Member member: members) {
@@ -219,6 +218,24 @@ public class UsersRolePrivilegeLoader implements ApplicationListener<ContextRefr
         reactionDAO.save(react2);
         reactionDAO.save(react3);
         reactionDAO.save(react4);
+
+        Set<Reaction> rSet1 = new HashSet<>(), rSet2 = new HashSet<>();
+        rSet1.add(react1);
+        rSet1.add(react2);
+        rSet2.add(react3);
+        rSet2.add(react4);
+
+        com1.setReactions(rSet1);
+        com2.setReactions(rSet2);
+
+        commentDAO.save(com1);
+        commentDAO.save(com2);
+
+        Set<Comment> cSet = new HashSet<>();
+        cSet.add(com1);
+        cSet.add(com2);
+        post.setComments(cSet);
+        postDAO.save(post);
     }
 }
 

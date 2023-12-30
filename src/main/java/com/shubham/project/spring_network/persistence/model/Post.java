@@ -37,6 +37,10 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private Set<Reaction> reactions;
 
+    @OneToMany(mappedBy="post")
+    private Set<Comment> comments;
+
+
     public Post () {
 
     }
@@ -94,5 +98,13 @@ public class Post {
 
     public void setReactions(Set<Reaction> reactions) {
         this.reactions = reactions;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }
